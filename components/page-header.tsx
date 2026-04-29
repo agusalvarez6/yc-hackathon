@@ -16,14 +16,18 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex h-14 items-center justify-between border-b bg-background/80 backdrop-blur-sm px-6 sticky top-0 z-10",
+        "sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-background/80 px-6 backdrop-blur-sm",
         className,
       )}
     >
-      <div>
-        <h1 className="text-sm font-semibold">{title}</h1>
+      <div className="min-w-0">
+        <h1 className="text-sm font-semibold tracking-tight text-foreground">
+          {title}
+        </h1>
         {subtitle && (
-          <p className="text-[11px] text-muted-foreground">{subtitle}</p>
+          <p className="truncate text-[11px] text-muted-foreground">
+            {subtitle}
+          </p>
         )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}

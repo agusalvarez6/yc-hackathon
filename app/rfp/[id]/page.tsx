@@ -50,11 +50,11 @@ export default async function RfpDetailPage({ params }: PageProps) {
         subtitle={rfp.summary.title}
         actions={
           <Link
-            href="/"
+            href="/opportunities"
             className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Back to inbox
+            Back to opportunities
           </Link>
         }
       />
@@ -405,7 +405,11 @@ function TasksSection({
               <ul className="space-y-2 p-4">
                 {items.map((req) => (
                   <li key={req.id}>
-                    <TaskRow req={req} documentMap={documentMap} />
+                    <TaskRow
+                      req={req}
+                      documentMap={documentMap}
+                      team={team.members}
+                    />
                   </li>
                 ))}
               </ul>

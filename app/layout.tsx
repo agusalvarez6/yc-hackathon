@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar, type AppSidebarUser } from "@/components/app-sidebar";
 import { getTeam } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -11,9 +13,9 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Lyra AI — RFP Agent",
+  title: "Tender Express — RFP Agent",
   description:
-    "AI-native RFP response workflow for vendors selling into enterprise.",
+    "Tender Express turns inbound RFPs into reviewed, ready-to-send proposals.",
 };
 
 const geistSans = Geist({
@@ -38,11 +40,43 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen">
-            <AppSidebar companyName={team.company.name} />
+            <Suspense
+              fallback={<AppSidebar companyName={team.company.name} user={null} />}
+            >
+              <SidebarWithUser companyName={team.company.name} />
+            </Suspense>
             <main className="flex-1 min-w-0">{children}</main>
           </div>
         </ThemeProvider>
       </body>
     </html>
   );
+}
+
+async function SidebarWithUser({ companyName }: { companyName: string }) {
+  const user = await getCurrentUser();
+  return <AppSidebar companyName={companyName} user={user} />;
+}
+
+async function getCurrentUser(): Promise<AppSidebarUser | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user?.email) return null;
+    const email = data.user.email;
+    const initials =
+      email
+        .split("@")[0]
+        .split(/[._-]/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((s) => s[0]?.toUpperCase() ?? "")
+        .join("") ||
+      email[0]?.toUpperCase() ||
+      "?";
+    return { email, initials };
+  } catch {
+    // Supabase env unset (local dev without keys) — render anonymous chrome.
+    return null;
+  }
 }
