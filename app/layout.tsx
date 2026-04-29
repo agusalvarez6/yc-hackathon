@@ -13,9 +13,9 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Lyra AI — RFP Agent",
+  title: "Tender Express — RFP Agent",
   description:
-    "AI-native RFP response workflow for vendors selling into enterprise.",
+    "Tender Express turns inbound RFPs into reviewed, ready-to-send proposals.",
 };
 
 const geistSans = Geist({

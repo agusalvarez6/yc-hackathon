@@ -3,7 +3,7 @@
 /* Globe.tsx — full-bleed 3D globe with REAL country borders + contract markers.
    Slow rotation, drag/zoom (correct directions), hover tooltip, click-to-filter.
    Draw loop is FULLY decoupled from React state via refs — no flicker.
-   Ported from the standalone Lyra Atlas prototype. */
+   Ported from the standalone Tender Express Atlas prototype. */
 
 import {
   useRef,
