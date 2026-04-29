@@ -2,24 +2,25 @@ import "server-only";
 
 import type { RfpDetail } from "@/lib/types";
 import type { ProposalOutput } from "@/lib/ai/tools/proposal";
-import type { MatchChunk } from "./match";
+import type { CorpusDocument } from "./match";
 import { ai } from "@/lib/ai/client";
 import { loadPrompt } from "@/lib/ai/prompts";
 import { submitProposalTool } from "@/lib/ai/tools";
 
 export interface ProposalInput {
   rfp: RfpDetail;
-  chunks: MatchChunk[];
+  corpus: CorpusDocument[];
 }
 
 export async function generateProposalMarkdown(
   input: ProposalInput,
 ): Promise<ProposalOutput> {
   const system = await loadPrompt("proposal");
-  const user = JSON.stringify({ rfp: input.rfp, chunks: input.chunks });
+  const user = JSON.stringify({ rfp: input.rfp, corpus: input.corpus });
 
   const completion = await ai.chat.completions.create({
-    model: "gemini-3.1-pro-preview",
+    model: "google/gemini-3.1-pro-preview",
+    max_tokens: 8000,
     messages: [
       { role: "system", content: system },
       { role: "user", content: user },

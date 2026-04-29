@@ -1,10 +1,10 @@
 "use server";
 
-import { embed } from "@/lib/ai/embed";
-import { matchRfp, type MatchChunk } from "@/lib/ai/services";
+import { matchRfp } from "@/lib/ai/services";
 import type { Result } from "@/lib/ai/result";
 import type { RfpDetail } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
+import { loadCompanyCorpus } from "@/lib/company-corpus";
 
 export interface CompleteTaskInput {
   taskId: string;
@@ -26,34 +26,11 @@ export async function completeTaskWithEvidenceAction(
     if (taskRow.error) return { ok: false, error: taskRow.error.message };
     const rfpId = taskRow.data.rfp_id as string;
 
-    const chunks = chunkEvidence(input.evidenceText);
-    const vectors = await embed(chunks);
-
-    const chunkRows = chunks.map((content, i) => ({
-      document_id: `evidence:${input.taskId}`,
-      tag: "evidence",
-      owner_id: null,
-      page: 1,
-      chunk_index: i,
-      content,
-      embedding: vectors[i],
-    }));
-
-    const inserted = await supabase
-      .from("document_chunks")
-      .insert(chunkRows)
-      .select("id");
-    if (inserted.error) return { ok: false, error: inserted.error.message };
-    const insertedIds = (inserted.data as Array<{ id: string }>).map(
-      (r) => r.id,
-    );
-
     const upd = await supabase
       .from("tasks")
       .update({
         status: "done",
         closed_by: "user",
-        evidence_chunk_ids: insertedIds,
         evidence_text: input.evidenceText,
         updated_at: new Date().toISOString(),
       })
@@ -97,15 +74,6 @@ export async function reassignTaskAction(
   }
 }
 
-function chunkEvidence(text: string): string[] {
-  if (text.length <= 1000) return [text];
-  const chunks: string[] = [];
-  for (let i = 0; i < text.length; i += 800) {
-    chunks.push(text.slice(i, i + 800));
-  }
-  return chunks;
-}
-
 async function rerunMatch(
   supabase: Awaited<ReturnType<typeof createClient>>,
   rfpId: string,
@@ -118,38 +86,20 @@ async function rerunMatch(
   if (row.error || !row.data) return [];
   const detail = row.data.detail as RfpDetail;
 
-  const queries = detail.compliance.map((r) => r.requirement);
-  if (queries.length === 0) return [];
-  const vectors = await embed(queries);
+  const evidenceRows = await supabase
+    .from("tasks")
+    .select("id, evidence_text")
+    .eq("rfp_id", rfpId)
+    .not("evidence_text", "is", null);
+  const evidenceNotes = (
+    (evidenceRows.data as Array<{ id: string; evidence_text: string | null }> | null) ?? []
+  )
+    .filter((r) => r.evidence_text && r.evidence_text.trim() !== "")
+    .map((r) => ({ taskId: r.id, text: r.evidence_text as string }));
 
-  const seen = new Set<string>();
-  const hits: MatchChunk[] = [];
-  for (let i = 0; i < vectors.length && hits.length < 50; i++) {
-    const { data } = await supabase.rpc("match_chunks", {
-      query_embedding: vectors[i],
-      k: 5,
-    });
-    if (!data) continue;
-    for (const r of data as Array<{
-      id: string;
-      document_id: string;
-      tag: string;
-      page: number;
-      content: string;
-    }>) {
-      if (seen.has(r.id)) continue;
-      seen.add(r.id);
-      hits.push({
-        documentId: r.document_id,
-        tag: r.tag,
-        page: r.page,
-        content: r.content,
-      });
-      if (hits.length >= 50) break;
-    }
-  }
+  const corpus = loadCompanyCorpus();
+  const out = await matchRfp({ rfp: detail, corpus, evidenceNotes });
 
-  const out = await matchRfp({ rfp: detail, chunks: hits });
   detail.bidNoBid = {
     recommendation: out.recommendation,
     confidence: out.confidence,
