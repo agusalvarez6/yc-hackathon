@@ -2,9 +2,10 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { FileText, Sparkles } from "lucide-react";
 import { RegenerateButton } from "./regenerate-button";
+import { createClient } from "@/lib/supabase/server";
 
-async function loadProposal(rfpId: string): Promise<string | null> {
-  const file = path.join(process.cwd(), "data", "proposals", `${rfpId}.md`);
+async function loadProposalFromFile(slug: string): Promise<string | null> {
+  const file = path.join(process.cwd(), "data", "proposals", `${slug}.md`);
   try {
     return await fs.readFile(file, "utf8");
   } catch {
@@ -12,8 +13,27 @@ async function loadProposal(rfpId: string): Promise<string | null> {
   }
 }
 
-export async function ProposalSection({ rfpId }: { rfpId: string }) {
-  const markdown = await loadProposal(rfpId);
+async function loadProposalFromDb(rfpDbId: string): Promise<string | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("proposals")
+    .select("markdown")
+    .eq("rfp_id", rfpDbId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data.markdown as string;
+}
+
+export async function ProposalSection({
+  rfpSlug,
+  rfpDbId,
+}: {
+  rfpSlug: string;
+  rfpDbId?: string;
+}) {
+  const markdown = rfpDbId
+    ? await loadProposalFromDb(rfpDbId)
+    : await loadProposalFromFile(rfpSlug);
 
   return (
     <section className="space-y-3">
@@ -28,7 +48,11 @@ export async function ProposalSection({ rfpId }: { rfpId: string }) {
             memory.
           </p>
         </div>
-        <RegenerateButton rfpId={rfpId} hasProposal={markdown !== null} />
+        <RegenerateButton
+          rfpId={rfpDbId ?? rfpSlug}
+          hasProposal={markdown !== null}
+          disabled={!rfpDbId}
+        />
       </div>
 
       <div className="rounded-xl border bg-card overflow-hidden">

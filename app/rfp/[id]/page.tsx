@@ -42,6 +42,7 @@ interface TaskRecord {
 interface LoadedRfp {
   detail: RfpDetail;
   tasks: Map<string, TaskRecord>; // keyed by requirement_id
+  rfpDbId?: string; // UUID from rfps table; undefined for static seeds
 }
 
 async function loadRfp(id: string): Promise<LoadedRfp | null> {
@@ -73,7 +74,11 @@ async function loadRfp(id: string): Promise<LoadedRfp | null> {
       });
     }
   }
-  return { detail: row.data.detail as RfpDetail, tasks };
+  return {
+    detail: row.data.detail as RfpDetail,
+    tasks,
+    rfpDbId: row.data.id as string,
+  };
 }
 
 export default async function RfpDetailPage({ params }: PageProps) {
@@ -111,7 +116,7 @@ function RfpDetailFallback() {
 async function RfpDetailBody({ id }: { id: string }) {
   const loaded = await loadRfp(id);
   if (!loaded) notFound();
-  const { detail: rfp, tasks } = loaded;
+  const { detail: rfp, tasks, rfpDbId } = loaded;
 
   const team = getTeam();
   const docs = getDocuments();
@@ -140,7 +145,7 @@ async function RfpDetailBody({ id }: { id: string }) {
         <ComplianceMatrix rfp={rfp} documentMap={documentMap} />
         <TasksSection rfp={rfp} team={team} documentMap={documentMap} tasks={tasks} />
         <Suspense fallback={<p className="text-sm text-muted-foreground">Loading proposal…</p>}>
-          <ProposalSection rfpId={rfp.id} />
+          <ProposalSection rfpSlug={rfp.id} rfpDbId={rfpDbId} />
         </Suspense>
       </div>
     </>
