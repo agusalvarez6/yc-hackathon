@@ -1,32 +1,24 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { Globe, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type AtlasView = "list" | "world";
+export type AtlasView = "world" | "list";
 
 const ITEMS: { id: AtlasView; label: string; icon: typeof List }[] = [
-  { id: "list", label: "List", icon: List },
   { id: "world", label: "World", icon: Globe },
+  { id: "list", label: "List", icon: List },
 ];
 
-export function ViewSwitcher({ active }: { active: AtlasView }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+interface ViewSwitcherProps {
+  active: AtlasView;
+  onChange: (next: AtlasView) => void;
+}
 
-  function setView(next: AtlasView) {
-    if (next === active) return;
-    const params = new URLSearchParams(searchParams.toString());
-    if (next === "list") params.delete("view");
-    else params.set("view", next);
-    const qs = params.toString();
-    router.replace(qs ? `/?${qs}` : "/", { scroll: false });
-  }
-
+export function ViewSwitcher({ active, onChange }: ViewSwitcherProps) {
   return (
     <div
-      className="inline-flex items-center gap-1 rounded-full border bg-background p-1"
+      className="inline-flex items-center gap-0.5 rounded-full border bg-card/80 p-0.5 backdrop-blur-sm"
       role="tablist"
     >
       {ITEMS.map(({ id, label, icon: Icon }) => {
@@ -36,11 +28,11 @@ export function ViewSwitcher({ active }: { active: AtlasView }) {
             key={id}
             role="tab"
             aria-selected={isActive}
-            onClick={() => setView(id)}
+            onClick={() => onChange(id)}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
               isActive
-                ? "bg-primary text-primary-foreground shadow-sm"
+                ? "bg-foreground text-background"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >

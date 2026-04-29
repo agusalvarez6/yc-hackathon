@@ -5,10 +5,7 @@ import dynamic from "next/dynamic";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {
-  CATEGORY_BY_ID,
-  COUNTRY_BY_CODE,
-} from "@/lib/atlas/countries";
+import { CATEGORY_BY_ID, COUNTRY_BY_CODE } from "@/lib/atlas/countries";
 import type { AtlasContract } from "@/lib/atlas/contracts";
 import type { GlobeHandle } from "./globe";
 import { ContractModal } from "./contract-modal";
@@ -36,7 +33,6 @@ export function AtlasWorld({
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [selected, setSelected] = useState<AtlasContract | null>(null);
   const globeRef = useRef<GlobeHandle>(null);
-  const setSelectedCountry = onSelectedCountryChange;
 
   const totals = useMemo(() => {
     const total = contracts.length;
@@ -53,7 +49,7 @@ export function AtlasWorld({
     if (!selectedCountry) {
       return {
         title: "All regions",
-        subtitle: `${totals.total} contracts • $${totals.value.toFixed(0)}M total`,
+        subtitle: `${totals.total.toLocaleString()} contracts • $${totals.value.toFixed(0)}M total`,
       };
     }
     const country = COUNTRY_BY_CODE[selectedCountry];
@@ -66,41 +62,44 @@ export function AtlasWorld({
 
   function handleCountryClick(a3: string) {
     if (selectedCountry === a3) {
-      setSelectedCountry(null);
+      onSelectedCountryChange(null);
       return;
     }
-    setSelectedCountry(a3);
+    onSelectedCountryChange(a3);
     const country = COUNTRY_BY_CODE[a3];
     if (country) globeRef.current?.focusOn(country.lat, country.lng);
   }
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-xl border bg-card">
-        <div className="flex flex-col gap-0 lg:flex-row">
-          {/* Globe stage */}
-          <div className="relative h-[420px] w-full lg:h-[640px] lg:flex-1">
-            <Globe
-              ref={globeRef}
-              contracts={contracts}
-              selectedCountry={selectedCountry}
-              hoveredCountry={hoveredCountry}
-              onCountryClick={handleCountryClick}
-              onCountryHover={setHoveredCountry}
-              onMarkerClick={(c) => setSelected(c)}
-              autoRotate
-              rightInset={0}
-            />
-            <div className="pointer-events-none absolute left-4 top-4 rounded-lg bg-background/90 px-3 py-2 text-[11px] shadow-sm backdrop-blur">
-              <div className="font-medium">Drag to rotate</div>
-              <div className="text-muted-foreground">
-                Scroll to zoom • Click a country
-              </div>
-            </div>
-          </div>
+      <div className="relative h-[calc(100vh-8.5rem)] min-h-[560px] w-full overflow-hidden">
+        {/* Full-bleed globe */}
+        <Globe
+          ref={globeRef}
+          contracts={contracts}
+          selectedCountry={selectedCountry}
+          hoveredCountry={hoveredCountry}
+          onCountryClick={handleCountryClick}
+          onCountryHover={setHoveredCountry}
+          onMarkerClick={(c) => setSelected(c)}
+          autoRotate
+          rightInset={336}
+        />
 
-          {/* Drawer */}
-          <div className="flex h-[640px] w-full flex-col border-t lg:h-[640px] lg:w-80 lg:border-l lg:border-t-0">
+        {/* Helper hint, top-left */}
+        <div className="pointer-events-none absolute left-6 top-6 rounded-lg border bg-card/80 px-3 py-2 text-[11px] shadow-sm backdrop-blur">
+          <div className="font-medium">Drag to rotate</div>
+          <div className="text-muted-foreground">
+            Scroll to zoom • Click a country
+          </div>
+        </div>
+
+        {/* Heatmap legend, bottom-left */}
+        <HeatLegend />
+
+        {/* Floating drawer, right */}
+        <aside className="absolute right-6 top-6 bottom-6 w-80 rounded-xl border bg-card/85 shadow-xl backdrop-blur">
+          <div className="flex h-full flex-col">
             <div className="flex items-start justify-between gap-2 border-b px-5 py-4">
               <div className="min-w-0">
                 <h3 className="truncate text-sm font-semibold">
@@ -114,7 +113,7 @@ export function AtlasWorld({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setSelectedCountry(null)}
+                  onClick={() => onSelectedCountryChange(null)}
                   className="h-7 px-2 text-xs"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -126,11 +125,11 @@ export function AtlasWorld({
             <div className="min-h-0 flex-1 overflow-y-auto">
               {visible.length === 0 ? (
                 <div className="px-5 py-8 text-center text-xs text-muted-foreground">
-                  No contracts in this country.
+                  No contracts match the current filters.
                 </div>
               ) : (
                 <ul className="divide-y">
-                  {visible.map((c) => {
+                  {visible.slice(0, 80).map((c) => {
                     const category = CATEGORY_BY_ID[c.category];
                     const tone =
                       STATUS_TONE[c.status] ??
@@ -155,7 +154,7 @@ export function AtlasWorld({
                             <span aria-hidden>•</span>
                             <span>{c.countryName}</span>
                           </div>
-                          <div className="mt-1 line-clamp-2 text-sm font-medium">
+                          <div className="mt-1 line-clamp-2 text-sm font-medium leading-snug">
                             {c.title}
                           </div>
                           <div className="mt-1 text-[11px] text-muted-foreground">
@@ -192,11 +191,47 @@ export function AtlasWorld({
                 </ul>
               )}
             </div>
+            {visible.length > 80 && (
+              <div className="border-t px-5 py-2 text-center text-[11px] text-muted-foreground">
+                Showing 80 of {visible.length.toLocaleString()}
+              </div>
+            )}
           </div>
-        </div>
+        </aside>
       </div>
 
       <ContractModal contract={selected} onClose={() => setSelected(null)} />
     </>
+  );
+}
+
+// Same six-stop ramp as the globe heatmap.
+const RAMP: [number, number, number][] = [
+  [244, 244, 245],
+  [228, 228, 231],
+  [203, 213, 225],
+  [148, 163, 184],
+  [71, 85, 105],
+  [15, 23, 42],
+];
+
+function HeatLegend() {
+  return (
+    <div className="absolute bottom-6 left-6 rounded-lg border bg-card/80 px-3 py-2 text-[11px] shadow-sm backdrop-blur">
+      <div className="mb-1 font-medium">Contract value</div>
+      <div className="flex items-center gap-2">
+        <span className="text-muted-foreground">Low</span>
+        <div className="flex h-2 w-32 overflow-hidden rounded-full">
+          {RAMP.map((c, i) => (
+            <div
+              key={i}
+              className="flex-1"
+              style={{ background: `rgb(${c[0]},${c[1]},${c[2]})` }}
+            />
+          ))}
+        </div>
+        <span className="text-muted-foreground">High</span>
+      </div>
+    </div>
   );
 }
