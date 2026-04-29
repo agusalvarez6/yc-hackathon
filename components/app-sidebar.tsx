@@ -86,18 +86,22 @@ export function AppSidebar({ companyName, user }: AppSidebarProps) {
     <aside className="hidden w-60 shrink-0 flex-col border-r bg-background/60 backdrop-blur-sm md:flex">
       <Link
         href="/"
-        className="flex h-14 items-center gap-2 border-b px-4 transition-colors hover:bg-accent/40"
+        className="group flex h-14 items-center gap-2.5 border-b px-4 transition-colors hover:bg-accent/40"
       >
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-violet-500 to-sky-500 text-white">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-violet-500 to-sky-500 text-white shadow-sm">
           <Sparkles className="h-4 w-4" />
         </div>
         <div className="leading-tight">
-          <div className="text-sm font-semibold">{companyName}</div>
-          <div className="text-[10px] text-muted-foreground">RFP Agent</div>
+          <div className="text-sm font-semibold tracking-tight">
+            {companyName}
+          </div>
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            RFP Agent
+          </div>
         </div>
       </Link>
 
-      <nav className="flex-1 space-y-5 p-3">
+      <nav className="flex-1 space-y-6 p-3">
         <NavGroup label="Discover" items={DISCOVER} pathname={pathname} />
         <NavGroup label="Company" items={COMPANY} pathname={pathname} />
       </nav>

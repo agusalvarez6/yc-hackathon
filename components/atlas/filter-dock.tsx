@@ -181,7 +181,7 @@ function SearchPill({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
   return (
-    <div className="relative flex h-9 min-w-[260px] items-center gap-2 rounded-full border bg-card/80 px-3.5 backdrop-blur-sm">
+    <div className="relative flex h-9 min-w-[260px] items-center gap-2 rounded-full border bg-card/80 px-3.5 shadow-sm backdrop-blur-sm transition-colors focus-within:bg-card">
       <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       <input
         ref={inputRef}
@@ -246,10 +246,11 @@ function FilterPopover({
         type="button"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium backdrop-blur-sm transition-colors",
+          "inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium shadow-sm backdrop-blur-sm transition-colors",
           isActive
             ? "border-foreground bg-foreground text-background"
             : "border-border bg-card/80 text-foreground hover:bg-card",
+          open && !isActive && "bg-card",
         )}
       >
         <span>{label}</span>

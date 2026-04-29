@@ -27,8 +27,8 @@ export default function AtlasPage() {
         subtitle="All public RFPs we’re tracking, on the globe."
       />
 
-      <div className="border-b bg-background/80 px-6 py-3 backdrop-blur-sm">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="border-b bg-background/70 px-6 py-3.5 backdrop-blur-sm">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <FilterDock
               contracts={contracts}
@@ -37,7 +37,7 @@ export default function AtlasPage() {
             />
           </div>
           <div className="flex items-center gap-3 pt-1">
-            <span className="text-[11px] tabular-nums text-muted-foreground">
+            <span className="hidden whitespace-nowrap text-[11px] tabular-nums text-muted-foreground sm:inline">
               {filtered.length.toLocaleString()} of{" "}
               {contracts.length.toLocaleString()}
             </span>
