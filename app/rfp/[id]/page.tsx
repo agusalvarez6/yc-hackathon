@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/page-header";
 import { Avatar } from "@/components/avatar";
 import { OwnerPill } from "@/components/owner-pill";
 import { getDocuments, getRfpDetail, getRfpIds, getTeam } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import type {
   CompanyDocument,
@@ -32,10 +33,85 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+interface TaskRecord {
+  taskId: string;
+  assigneeId: string;
+  status: "open" | "done";
+}
+
+interface LoadedRfp {
+  detail: RfpDetail;
+  tasks: Map<string, TaskRecord>; // keyed by requirement_id
+}
+
+async function loadRfp(id: string): Promise<LoadedRfp | null> {
+  const seeded = getRfpDetail(id);
+  if (seeded) return { detail: seeded, tasks: new Map() };
+  const supabase = await createClient();
+  const row = await supabase
+    .from("rfps")
+    .select("id, detail")
+    .eq("slug", id)
+    .single();
+  if (row.error || !row.data) return null;
+  const tasksRes = await supabase
+    .from("tasks")
+    .select("id, requirement_id, assignee_id, status")
+    .eq("rfp_id", row.data.id);
+  const tasks = new Map<string, TaskRecord>();
+  if (tasksRes.data) {
+    for (const t of tasksRes.data as Array<{
+      id: string;
+      requirement_id: string;
+      assignee_id: string;
+      status: "open" | "done";
+    }>) {
+      tasks.set(t.requirement_id, {
+        taskId: t.id,
+        assigneeId: t.assignee_id,
+        status: t.status,
+      });
+    }
+  }
+  return { detail: row.data.detail as RfpDetail, tasks };
+}
+
 export default async function RfpDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const rfp = getRfpDetail(id);
-  if (!rfp) notFound();
+  return (
+    <Suspense fallback={<RfpDetailFallback />}>
+      <RfpDetailBody id={id} />
+    </Suspense>
+  );
+}
+
+function RfpDetailFallback() {
+  return (
+    <>
+      <PageHeader
+        title="Loading…"
+        subtitle="Fetching RFP"
+        actions={
+          <Link
+            href="/opportunities"
+            className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to opportunities
+          </Link>
+        }
+      />
+      <div className="mx-auto max-w-6xl p-6 text-sm text-muted-foreground">
+        Loading…
+      </div>
+    </>
+  );
+}
+
+async function RfpDetailBody({ id }: { id: string }) {
+  const loaded = await loadRfp(id);
+  if (!loaded) notFound();
+  const { detail: rfp, tasks } = loaded;
 
   const team = getTeam();
   const docs = getDocuments();
@@ -62,7 +138,7 @@ export default async function RfpDetailPage({ params }: PageProps) {
       <div className="mx-auto max-w-6xl space-y-8 p-6">
         <SummaryHeader rfp={rfp} />
         <ComplianceMatrix rfp={rfp} documentMap={documentMap} />
-        <TasksSection rfp={rfp} team={team} documentMap={documentMap} />
+        <TasksSection rfp={rfp} team={team} documentMap={documentMap} tasks={tasks} />
         <Suspense fallback={<p className="text-sm text-muted-foreground">Loading proposal…</p>}>
           <ProposalSection rfpId={rfp.id} />
         </Suspense>
@@ -332,17 +408,20 @@ function TasksSection({
   rfp,
   team,
   documentMap,
+  tasks,
 }: {
   rfp: RfpDetail;
   team: TeamData;
   documentMap: Record<string, CompanyDocument>;
+  tasks: Map<string, TaskRecord>;
 }) {
   const open = rfp.compliance.filter((r) => r.status !== "ready");
   const grouped = new Map<string, RfpRequirement[]>();
   for (const r of open) {
-    const list = grouped.get(r.owner) ?? [];
+    const ownerId = tasks.get(r.id)?.assigneeId ?? r.owner ?? "unassigned";
+    const list = grouped.get(ownerId) ?? [];
     list.push(r);
-    grouped.set(r.owner, list);
+    grouped.set(ownerId, list);
   }
   const ordered = Array.from(grouped.entries()).sort(
     (a, b) => b[1].length - a[1].length,
@@ -409,6 +488,7 @@ function TasksSection({
                       req={req}
                       documentMap={documentMap}
                       team={team.members}
+                      taskId={tasks.get(req.id)?.taskId}
                     />
                   </li>
                 ))}

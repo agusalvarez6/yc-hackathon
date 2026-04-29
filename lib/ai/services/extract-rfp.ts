@@ -14,8 +14,8 @@ export async function extractRfpDetail(
 ): Promise<RfpDetail> {
   const system = await loadPrompt("rfp-detail");
   const completion = await ai.chat.completions.create({
-    model: "google/gemini-3.1-pro-preview",
-    max_tokens: 4000,
+    model: "google/gemini-3-flash-preview",
+    max_tokens: 32000,
     messages: [
       { role: "system", content: system },
       { role: "user", content: input.rfpText },
