@@ -1,0 +1,53 @@
+{
+  "company": {
+    "name": "Lyra AI",
+    "tagline": "Enterprise AI workflow automation"
+  },
+  "members": [
+    {
+      "id": "maya",
+      "name": "Maya Chen",
+      "role": "Founder & CEO",
+      "initials": "MC",
+      "color": "bg-violet-500",
+      "owns": ["Strategy", "Pricing approval", "Executive narrative"],
+      "openItems": 4
+    },
+    {
+      "id": "marcus",
+      "name": "Marcus Rivera",
+      "role": "Head of Security & Compliance",
+      "initials": "MR",
+      "color": "bg-emerald-500",
+      "owns": ["SOC 2", "Security questionnaires", "Data handling", "Certifications"],
+      "openItems": 7
+    },
+    {
+      "id": "priya",
+      "name": "Priya Patel",
+      "role": "Sales Lead",
+      "initials": "PP",
+      "color": "bg-amber-500",
+      "owns": ["Customer references", "Case studies", "Win stories"],
+      "openItems": 3
+    },
+    {
+      "id": "jake",
+      "name": "Jake Nakamura",
+      "role": "Implementation Lead",
+      "initials": "JN",
+      "color": "bg-sky-500",
+      "owns": ["Technical approach", "Timelines", "Team qualifications"],
+      "openItems": 5
+    },
+    {
+      "id": "sarah",
+      "name": "Sarah Goldberg",
+      "role": "Finance & Operations",
+      "initials": "SG",
+      "color": "bg-rose-500",
+      "owns": ["Pricing", "Insurance", "W-9", "Payment terms"],
+      "openItems": 2
+    }
+  ]
+}

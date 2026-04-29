@@ -1,0 +1,70 @@
+{
+  "opportunities": [
+    {
+      "id": "northwind-bank",
+      "buyer": "Northwind Financial Group",
+      "industry": "Banking",
+      "title": "AI-Powered Customer Support Platform",
+      "deadline": "2026-05-12",
+      "received": "2026-04-21",
+      "estimatedValue": "$2.4M / 3 yrs",
+      "fitScore": 87,
+      "recommendation": "bid",
+      "topBlocker": "SOC 2 evidence needs refresh for FFIEC reviewer",
+      "requirementsCount": 47,
+      "ready": 31,
+      "partial": 9,
+      "missing": 7,
+      "evaluation": [
+        { "label": "Technical approach", "weight": 40 },
+        { "label": "Price", "weight": 25 },
+        { "label": "Past performance", "weight": 20 },
+        { "label": "Security & compliance", "weight": 15 }
+      ]
+    },
+    {
+      "id": "helix-health",
+      "buyer": "Helix Health Systems",
+      "industry": "Healthcare",
+      "title": "Clinical Documentation AI Assistant",
+      "deadline": "2026-05-28",
+      "received": "2026-04-19",
+      "estimatedValue": "$3.1M / 2 yrs",
+      "fitScore": 64,
+      "recommendation": "review",
+      "topBlocker": "No HIPAA BAA template on file; missing healthcare reference",
+      "requirementsCount": 58,
+      "ready": 24,
+      "partial": 18,
+      "missing": 16,
+      "evaluation": [
+        { "label": "Clinical accuracy", "weight": 35 },
+        { "label": "HIPAA compliance", "weight": 25 },
+        { "label": "Implementation plan", "weight": 20 },
+        { "label": "Price", "weight": 20 }
+      ]
+    },
+    {
+      "id": "vanguard-mfg",
+      "buyer": "Vanguard Manufacturing Inc.",
+      "industry": "Industrial",
+      "title": "Predictive Maintenance & Workflow Automation",
+      "deadline": "2026-06-05",
+      "received": "2026-04-25",
+      "estimatedValue": "$1.8M / 2 yrs",
+      "fitScore": 72,
+      "recommendation": "bid",
+      "topBlocker": "Need OT/ICS deployment reference and on-prem deployment plan",
+      "requirementsCount": 39,
+      "ready": 22,
+      "partial": 11,
+      "missing": 6,
+      "evaluation": [
+        { "label": "Technical fit", "weight": 35 },
+        { "label": "Industrial experience", "weight": 25 },
+        { "label": "Price", "weight": 25 },
+        { "label": "Support model", "weight": 15 }
+      ]
+    }
+  ]
+}

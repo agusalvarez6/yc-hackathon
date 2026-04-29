@@ -1,0 +1,86 @@
+{
+  "documents": [
+    {
+      "id": "company-overview",
+      "name": "Company Overview 2026.pdf",
+      "tag": "company",
+      "size": "1.2 MB",
+      "uploaded": "2026-03-14",
+      "usedIn": 11,
+      "owner": "maya"
+    },
+    {
+      "id": "security-policy",
+      "name": "Information Security Policy v4.pdf",
+      "tag": "security",
+      "size": "3.8 MB",
+      "uploaded": "2026-04-02",
+      "usedIn": 9,
+      "owner": "marcus"
+    },
+    {
+      "id": "soc2-report",
+      "name": "SOC 2 Type II Report.pdf",
+      "tag": "compliance",
+      "size": "5.4 MB",
+      "uploaded": "2026-02-18",
+      "usedIn": 8,
+      "owner": "marcus"
+    },
+    {
+      "id": "case-study-citibank",
+      "name": "Case Study — Citibank Fraud Triage.pdf",
+      "tag": "case-study",
+      "size": "2.1 MB",
+      "uploaded": "2026-01-22",
+      "usedIn": 6,
+      "owner": "priya"
+    },
+    {
+      "id": "case-study-optum",
+      "name": "Case Study — Optum Claims Automation.pdf",
+      "tag": "case-study",
+      "size": "1.8 MB",
+      "uploaded": "2026-02-09",
+      "usedIn": 4,
+      "owner": "priya"
+    },
+    {
+      "id": "pricing-sheet",
+      "name": "Pricing Sheet 2026.xlsx",
+      "tag": "pricing",
+      "size": "412 KB",
+      "uploaded": "2026-04-10",
+      "usedIn": 7,
+      "owner": "sarah"
+    },
+    {
+      "id": "implementation-methodology",
+      "name": "Implementation Methodology.pdf",
+      "tag": "delivery",
+      "size": "2.6 MB",
+      "uploaded": "2026-03-01",
+      "usedIn": 9,
+      "owner": "jake"
+    },
+    {
+      "id": "insurance-cert",
+      "name": "Insurance Certificate (expires 2025).pdf",
+      "tag": "compliance",
+      "size": "284 KB",
+      "uploaded": "2025-11-30",
+      "usedIn": 5,
+      "owner": "sarah",
+      "warning": "Expired Dec 2025 — renewal pending"
+    },
+    {
+      "id": "customer-references",
+      "name": "Approved Customer References.pdf",
+      "tag": "references",
+      "size": "640 KB",
+      "uploaded": "2026-04-15",
+      "usedIn": 3,
+      "owner": "priya"
+    }
+  ]
+}

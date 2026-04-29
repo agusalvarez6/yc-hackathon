@@ -1,0 +1,138 @@
+{
+  "id": "vanguard-mfg",
+  "summary": {
+    "buyer": "Vanguard Manufacturing Inc.",
+    "industry": "Industrial",
+    "title": "Predictive Maintenance & Workflow Automation",
+    "deadline": "2026-06-05",
+    "received": "2026-04-25",
+    "estimatedValue": "$1.8M / 2 yrs",
+    "contractType": "Enterprise license + on-prem deployment",
+    "primaryContact": "Henrik Larsen, VP Operations Technology",
+    "submissionFormat": "PDF + Excel compliance matrix, emailed to procurement@vanguardmfg.com",
+    "overview": "Vanguard operates 11 plants across North America with significant unplanned downtime exposure. The buyer wants an AI platform that ingests OT/ICS sensor data, predicts equipment failure, and triggers maintenance workflows. Deployment must be on-prem due to OT segmentation policy.",
+    "evaluationCriteria": [
+      { "label": "Technical fit", "weight": 35 },
+      { "label": "Industrial experience", "weight": 25 },
+      { "label": "Price", "weight": 25 },
+      { "label": "Support model", "weight": 15 }
+    ],
+    "requiredAttachments": [
+      "Technical proposal",
+      "On-prem deployment architecture diagram",
+      "Pricing schedule",
+      "Two industrial customer references",
+      "ISA/IEC 62443 compliance attestation",
+      "24/7 support model description"
+    ]
+  },
+  "bidNoBid": {
+    "recommendation": "bid",
+    "confidence": 72,
+    "strengths": [
+      "AI workflow automation translates well to maintenance triage",
+      "Implementation methodology supports phased rollouts",
+      "Pricing model is flexible for multi-site deployments"
+    ],
+    "weaknesses": [
+      "No prior OT/ICS deployment reference",
+      "Default deployment model is SaaS; on-prem is a custom path",
+      "No ISA/IEC 62443 attestation today"
+    ]
+  },
+  "compliance": [
+    {
+      "id": "R1",
+      "section": "2.1",
+      "requirement": "Provide on-prem deployment architecture with air-gap option.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [{ "doc": "implementation-methodology", "snippet": "On-prem appendix exists, air-gap not yet documented", "page": 18 }],
+      "owner": "jake",
+      "risk": "high"
+    },
+    {
+      "id": "R2",
+      "section": "3.1",
+      "requirement": "Two industrial customer references.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [],
+      "owner": "priya",
+      "risk": "high"
+    },
+    {
+      "id": "R3",
+      "section": "4.1",
+      "requirement": "ISA/IEC 62443 compliance attestation.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [],
+      "owner": "marcus",
+      "risk": "high"
+    },
+    {
+      "id": "R4",
+      "section": "5.1",
+      "requirement": "24/7 support model description with named regional teams.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "implementation-methodology", "snippet": "Follow-the-sun support across 3 regions", "page": 22 }],
+      "owner": "jake",
+      "risk": "low"
+    },
+    {
+      "id": "R5",
+      "section": "6.1",
+      "requirement": "Pricing schedule with multi-site discount.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "pricing-sheet", "snippet": "Multi-site enterprise tier with 18% discount at 5+ sites", "page": 3 }],
+      "owner": "sarah",
+      "risk": "low"
+    }
+  ],
+  "missingInfo": [
+    {
+      "owner": "jake",
+      "items": [
+        "Document air-gap deployment topology and update operator handbook.",
+        "Confirm OT data ingestion approach (OPC UA, MQTT, custom protocol)."
+      ]
+    },
+    {
+      "owner": "priya",
+      "items": [
+        "Source two industrial customer references — none on file."
+      ]
+    },
+    {
+      "owner": "marcus",
+      "items": [
+        "Determine path to ISA/IEC 62443 compliance attestation: gap assessment now, or commit to roadmap."
+      ]
+    }
+  ],
+  "draft": [
+    {
+      "section": "Executive Summary",
+      "owner": "maya",
+      "body": "Unplanned downtime is the largest controllable cost in Vanguard's operations. Lyra AI proposes a predictive maintenance and workflow automation platform deployable on-prem within Vanguard's OT segmentation envelope. [INDUSTRIAL NARRATIVE — needs operations-specific framing from Maya].",
+      "citations": ["company-overview"],
+      "placeholders": ["INDUSTRIAL NARRATIVE — needs operations-specific framing from Maya"]
+    },
+    {
+      "section": "Technical Approach",
+      "owner": "jake",
+      "body": "The Lyra platform will be deployed on-prem with optional air-gap operation. [DEPLOYMENT TOPOLOGY DIAGRAM — Jake to produce]. Sensor ingestion supports [PROTOCOLS — Jake to confirm].",
+      "citations": ["implementation-methodology"],
+      "placeholders": ["DEPLOYMENT TOPOLOGY DIAGRAM — Jake to produce", "PROTOCOLS — Jake to confirm"]
+    }
+  ],
+  "exports": [
+    { "name": "proposal_response.docx", "size": "—", "ready": false },
+    { "name": "compliance_matrix.xlsx", "size": "44 KB", "ready": true },
+    { "name": "missing_items_checklist.pdf", "size": "22 KB", "ready": true },
+    { "name": "submission_packet.zip", "size": "—", "ready": false }
+  ]
+}

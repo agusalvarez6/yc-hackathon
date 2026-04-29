@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { AppSidebar } from "@/components/app-sidebar";
+import { getTeam } from "@/lib/data";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -9,8 +11,9 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Lyra AI — RFP Agent",
+  description:
+    "AI-native RFP response workflow for vendors selling into enterprise.",
 };
 
 const geistSans = Geist({
@@ -24,16 +27,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const team = getTeam();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="flex min-h-screen">
+            <AppSidebar companyName={team.company.name} />
+            <main className="flex-1 min-w-0">{children}</main>
+          </div>
         </ThemeProvider>
       </body>
     </html>

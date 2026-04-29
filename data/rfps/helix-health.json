@@ -1,0 +1,162 @@
+{
+  "id": "helix-health",
+  "summary": {
+    "buyer": "Helix Health Systems",
+    "industry": "Healthcare",
+    "title": "Clinical Documentation AI Assistant",
+    "deadline": "2026-05-28",
+    "received": "2026-04-19",
+    "estimatedValue": "$3.1M / 2 yrs",
+    "contractType": "Enterprise SaaS license + professional services",
+    "primaryContact": "Dr. Anya Mehta, Chief Medical Information Officer",
+    "submissionFormat": "Helix vendor portal upload (PDF + completed compliance matrix)",
+    "overview": "Helix Health is deploying an AI clinical documentation assistant across 14 hospitals and 220 outpatient clinics. The system must integrate with Epic EHR, support 38 specialty templates, and meet HIPAA and HITECH requirements. Vendor must provide a Business Associate Agreement.",
+    "evaluationCriteria": [
+      { "label": "Clinical accuracy", "weight": 35 },
+      { "label": "HIPAA compliance", "weight": 25 },
+      { "label": "Implementation plan", "weight": 20 },
+      { "label": "Price", "weight": 20 }
+    ],
+    "requiredAttachments": [
+      "Technical proposal (max 35 pages)",
+      "Pricing schedule",
+      "Signed BAA template",
+      "HITRUST CSF certification",
+      "Three healthcare references",
+      "Clinical accuracy validation methodology"
+    ]
+  },
+  "bidNoBid": {
+    "recommendation": "review",
+    "confidence": 64,
+    "strengths": [
+      "AI workflow automation core capability transfers",
+      "Optum case study touches healthcare claims",
+      "Implementation methodology adapts cleanly"
+    ],
+    "weaknesses": [
+      "No HITRUST CSF certification — material gap",
+      "Optum is claims, not clinical; no direct EHR/Epic deployment reference",
+      "No BAA template currently on file",
+      "Clinical accuracy validation methodology does not exist as a formal artifact"
+    ]
+  },
+  "compliance": [
+    {
+      "id": "R1",
+      "section": "2.1",
+      "requirement": "Vendor must provide signed Business Associate Agreement on Helix template.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [],
+      "owner": "marcus",
+      "risk": "high",
+      "note": "No BAA on file. Legal review needed."
+    },
+    {
+      "id": "R2",
+      "section": "2.3",
+      "requirement": "HITRUST CSF certification, current within 12 months.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [],
+      "owner": "marcus",
+      "risk": "high",
+      "note": "Not currently HITRUST certified. Remediation timeline ~6 months."
+    },
+    {
+      "id": "R3",
+      "section": "3.1",
+      "requirement": "Three healthcare customer references with EHR integration experience.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [{ "doc": "case-study-optum", "snippet": "Optum claims automation — payer side", "page": 1 }],
+      "owner": "priya",
+      "risk": "high"
+    },
+    {
+      "id": "R4",
+      "section": "4.2",
+      "requirement": "Integrate with Epic EHR via FHIR R4 APIs.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [{ "doc": "implementation-methodology", "snippet": "FHIR R4 integration patterns supported", "page": 12 }],
+      "owner": "jake",
+      "risk": "medium"
+    },
+    {
+      "id": "R5",
+      "section": "5.1",
+      "requirement": "Clinical accuracy validation methodology with measurable thresholds.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [],
+      "owner": "jake",
+      "risk": "high"
+    },
+    {
+      "id": "R6",
+      "section": "6.1",
+      "requirement": "Encryption at rest and in transit, key management with HSM.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "security-policy", "snippet": "AES-256 + AWS KMS HSM", "page": 5 }],
+      "owner": "marcus",
+      "risk": "low"
+    },
+    {
+      "id": "R7",
+      "section": "7.1",
+      "requirement": "Pricing schedule with per-physician and per-encounter tiers.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [{ "doc": "pricing-sheet", "snippet": "Per-seat tier exists; per-encounter to be derived", "page": 2 }],
+      "owner": "sarah",
+      "risk": "medium"
+    }
+  ],
+  "missingInfo": [
+    {
+      "owner": "marcus",
+      "items": [
+        "Stand up legal review of Helix BAA template.",
+        "Decide whether to commit to HITRUST CSF certification roadmap (6-month estimate)."
+      ]
+    },
+    {
+      "owner": "priya",
+      "items": [
+        "Identify two healthcare references with Epic/EHR experience. None on file today."
+      ]
+    },
+    {
+      "owner": "jake",
+      "items": [
+        "Draft a clinical accuracy validation methodology including specialty-specific accuracy targets.",
+        "Confirm Epic FHIR integration scope (read-only vs. write)."
+      ]
+    }
+  ],
+  "draft": [
+    {
+      "section": "Executive Summary",
+      "owner": "maya",
+      "body": "Helix Health's clinical documentation burden is a systemic driver of physician burnout and revenue leakage. Lyra AI proposes a clinical documentation assistant that integrates directly with Epic, drafts visit notes during the encounter, and routes coding recommendations to revenue cycle. [HEALTHCARE NARRATIVE — needs healthcare-specific framing from Maya].",
+      "citations": ["case-study-optum"],
+      "placeholders": ["HEALTHCARE NARRATIVE — needs healthcare-specific framing from Maya"]
+    },
+    {
+      "section": "Security & Compliance",
+      "owner": "marcus",
+      "body": "Lyra maintains SOC 2 Type II controls and AES-256 encryption with HSM-backed key management. [HITRUST CSF status — missing; recommend partner attestation or commit to remediation roadmap]. [BAA — pending legal].",
+      "citations": ["security-policy", "soc2-report"],
+      "placeholders": ["HITRUST CSF status — missing", "BAA — pending legal"]
+    }
+  ],
+  "exports": [
+    { "name": "proposal_response.docx", "size": "—", "ready": false },
+    { "name": "compliance_matrix.xlsx", "size": "48 KB", "ready": true },
+    { "name": "missing_items_checklist.pdf", "size": "31 KB", "ready": true },
+    { "name": "submission_packet.zip", "size": "—", "ready": false }
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "id": "northwind-bank",
+  "summary": {
+    "buyer": "Northwind Financial Group",
+    "industry": "Banking",
+    "title": "AI-Powered Customer Support Platform",
+    "deadline": "2026-05-12",
+    "received": "2026-04-21",
+    "estimatedValue": "$2.4M / 3 yrs",
+    "contractType": "Master Services Agreement + SaaS license",
+    "primaryContact": "Lila Okafor, VP Customer Operations",
+    "submissionFormat": "Sealed PDF + .docx + completed compliance matrix",
+    "overview": "Northwind is replacing a 9-year-old contact-center platform with an AI-native customer support layer. The system must handle 18M annual contacts across retail banking, mortgage, and wealth management. Vendor must integrate with Salesforce Financial Services Cloud and the in-house core banking system.",
+    "evaluationCriteria": [
+      { "label": "Technical approach", "weight": 40 },
+      { "label": "Price", "weight": 25 },
+      { "label": "Past performance", "weight": 20 },
+      { "label": "Security & compliance", "weight": 15 }
+    ],
+    "requiredAttachments": [
+      "Technical proposal (max 40 pages)",
+      "Pricing schedule (Exhibit B)",
+      "SOC 2 Type II report",
+      "Three customer references (financial services preferred)",
+      "Insurance certificate ($5M cyber liability)",
+      "Implementation plan with milestones",
+      "Diversity & inclusion attestation",
+      "Signed W-9"
+    ]
+  },
+  "bidNoBid": {
+    "recommendation": "bid",
+    "confidence": 87,
+    "strengths": [
+      "AI workflow automation is core capability",
+      "Citibank case study is directly relevant for FFIEC reviewers",
+      "Implementation methodology aligns with 6-month rollout",
+      "Pricing model fits per-seat + outcome bonus structure"
+    ],
+    "weaknesses": [
+      "SOC 2 Type II refresh dated Feb 2026 — Northwind expects ≤90 days",
+      "Insurance certificate expired Dec 2025",
+      "Only 2 financial services references on file; RFP requires 3",
+      "No Salesforce FSC integration in past deployments — need partner attestation"
+    ]
+  },
+  "compliance": [
+    {
+      "id": "R1",
+      "section": "3.2",
+      "requirement": "Vendor must provide SOC 2 Type II report dated within 90 days of submission.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [{ "doc": "soc2-report", "snippet": "Audit period closed Feb 2026", "page": 1 }],
+      "owner": "marcus",
+      "risk": "high",
+      "note": "Current report is 87 days old at submission — within window but tight; recommend addendum letter."
+    },
+    {
+      "id": "R2",
+      "section": "3.4",
+      "requirement": "Provide a minimum of three (3) financial services customer references.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [
+        { "doc": "case-study-citibank", "snippet": "Citibank fraud triage — 18-month deployment", "page": 2 },
+        { "doc": "customer-references", "snippet": "First Republic — outbound servicing pilot", "page": 3 }
+      ],
+      "owner": "priya",
+      "risk": "high",
+      "note": "2 of 3 references on file. Need to confirm a third FS reference willing to be cited."
+    },
+    {
+      "id": "R3",
+      "section": "4.1",
+      "requirement": "Submit detailed technical implementation plan with phased milestones.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "implementation-methodology", "snippet": "Standard 6-phase rollout, with banking-specific addendum", "page": 8 }],
+      "owner": "jake",
+      "risk": "low"
+    },
+    {
+      "id": "R4",
+      "section": "4.5",
+      "requirement": "Vendor must integrate with Salesforce Financial Services Cloud.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [],
+      "owner": "jake",
+      "risk": "high",
+      "note": "No prior FSC integration documented. Recommend partner attestation from implementation partner Slalom."
+    },
+    {
+      "id": "R5",
+      "section": "5.2",
+      "requirement": "Provide pricing schedule using Exhibit B template, including volume discounts.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "pricing-sheet", "snippet": "Tiered pricing with 12% volume discount at 1M+ contacts", "page": 1 }],
+      "owner": "sarah",
+      "risk": "low"
+    },
+    {
+      "id": "R6",
+      "section": "6.1",
+      "requirement": "Maintain $5M cyber liability insurance, certificate dated within current year.",
+      "mandatory": true,
+      "status": "missing",
+      "evidence": [{ "doc": "insurance-cert", "snippet": "Coverage active but certificate expired Dec 2025", "page": 1 }],
+      "owner": "sarah",
+      "risk": "high",
+      "note": "Renewal in flight with The Hartford. ETA May 4."
+    },
+    {
+      "id": "R7",
+      "section": "7.3",
+      "requirement": "Describe data handling: encryption at rest and in transit, key management.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "security-policy", "snippet": "AES-256 at rest, TLS 1.3 in transit, AWS KMS", "page": 4 }],
+      "owner": "marcus",
+      "risk": "low"
+    },
+    {
+      "id": "R8",
+      "section": "7.5",
+      "requirement": "Vendor must commit to 99.9% uptime SLA with documented incident response.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "security-policy", "snippet": "99.95% SLA with 4-tier incident playbook", "page": 11 }],
+      "owner": "marcus",
+      "risk": "low"
+    },
+    {
+      "id": "R9",
+      "section": "8.1",
+      "requirement": "Diversity & inclusion attestation, including supplier diversity reporting.",
+      "mandatory": true,
+      "status": "partial",
+      "evidence": [{ "doc": "company-overview", "snippet": "DEI statement on file", "page": 14 }],
+      "owner": "maya",
+      "risk": "medium",
+      "note": "Statement exists but Northwind requires a signed attestation form (Exhibit D)."
+    },
+    {
+      "id": "R10",
+      "section": "9.2",
+      "requirement": "Provide signed W-9 and certify no debarment or sanctions exposure.",
+      "mandatory": true,
+      "status": "ready",
+      "evidence": [{ "doc": "company-overview", "snippet": "W-9 on file in compliance binder", "page": 22 }],
+      "owner": "sarah",
+      "risk": "low"
+    },
+    {
+      "id": "R11",
+      "section": "4.7",
+      "requirement": "Describe AI model governance, including bias testing and audit logs.",
+      "mandatory": false,
+      "status": "ready",
+      "evidence": [{ "doc": "security-policy", "snippet": "Quarterly bias audit, immutable audit log via Datadog", "page": 19 }],
+      "owner": "marcus",
+      "risk": "low"
+    },
+    {
+      "id": "R12",
+      "section": "10.1",
+      "requirement": "Executive sponsor sign-off letter with named accountable executive.",
+      "mandatory": false,
+      "status": "missing",
+      "evidence": [],
+      "owner": "maya",
+      "risk": "medium"
+    }
+  ],
+  "missingInfo": [
+    {
+      "owner": "marcus",
+      "items": [
+        "Confirm whether the SOC 2 Type II auditor will issue a bridge letter dated within 90 days of submission.",
+        "Send updated penetration test results from Q1 2026 to attach as Exhibit C.",
+        "Validate that audit log retention meets Northwind's 7-year requirement."
+      ]
+    },
+    {
+      "owner": "priya",
+      "items": [
+        "Secure a third financial services reference. Options on table: Truist (warm), JPMC (cold), Ally Bank (warm).",
+        "Confirm Citibank reference is approved for written attribution in the proposal."
+      ]
+    },
+    {
+      "owner": "jake",
+      "items": [
+        "Decide deployment partner for Salesforce Financial Services Cloud integration. Slalom and Deloitte are options.",
+        "Commit to a 6-month full rollout vs. 9-month phased rollout."
+      ]
+    },
+    {
+      "owner": "sarah",
+      "items": [
+        "Renewed insurance certificate from The Hartford — ETA May 4.",
+        "Sign supplier diversity attestation (Exhibit D)."
+      ]
+    },
+    {
+      "owner": "maya",
+      "items": [
+        "Provide signed executive sponsor letter naming accountable executive (likely yourself).",
+        "Approve pricing strategy: list price, 8% strategic discount, or anchor with outcome-based bonus."
+      ]
+    }
+  ],
+  "draft": [
+    {
+      "section": "Executive Summary",
+      "owner": "maya",
+      "body": "Northwind Financial Group's customers expect retail-grade digital experiences, and the contact center is the single largest determinant of NPS in retail banking. Lyra AI proposes to replace the legacy IVR-and-ticket model with an AI-native customer support layer that resolves 62% of contacts without agent involvement and accelerates the remaining 38% with in-line agent assist. Our work with [Citibank Fraud Triage] and [First Republic outbound servicing] is directly transferable to Northwind's retail, mortgage, and wealth lines.",
+      "citations": ["case-study-citibank", "customer-references"],
+      "placeholders": []
+    },
+    {
+      "section": "Technical Approach",
+      "owner": "jake",
+      "body": "Lyra deploys as a managed SaaS platform with secure VPC peering into Northwind's AWS environment. Our core architecture combines a retrieval layer over Northwind's policy and procedure corpus, a routing layer that classifies intent and risk, and a response layer that produces grounded answers with full source citations. Integration with Salesforce Financial Services Cloud will be delivered via [INTEGRATION PARTNER — pending Jake's decision].",
+      "citations": ["implementation-methodology", "security-policy"],
+      "placeholders": ["INTEGRATION PARTNER — pending Jake's decision"]
+    },
+    {
+      "section": "Security & Compliance",
+      "owner": "marcus",
+      "body": "Lyra maintains a SOC 2 Type II audit covering security, availability, and confidentiality. Data is encrypted at rest with AES-256 and in transit with TLS 1.3. AWS KMS manages keys with quarterly rotation. Audit logs are immutable and retained for [LOG RETENTION PERIOD — confirm Marcus]. AI model governance includes quarterly bias audits and red-team exercises documented in our governance handbook.",
+      "citations": ["soc2-report", "security-policy"],
+      "placeholders": ["LOG RETENTION PERIOD — confirm Marcus"]
+    },
+    {
+      "section": "Implementation Plan",
+      "owner": "jake",
+      "body": "We propose a [6-MONTH OR 9-MONTH — Jake to confirm] phased rollout: discovery (weeks 1–4), retail banking pilot (weeks 5–12), mortgage and wealth expansion (weeks 13–20), and full production cutover (weeks 21–24). Each phase concludes with a measurable success gate signed by the joint steering committee.",
+      "citations": ["implementation-methodology"],
+      "placeholders": ["6-MONTH OR 9-MONTH — Jake to confirm"]
+    },
+    {
+      "section": "Pricing Narrative",
+      "owner": "sarah",
+      "body": "Our proposed structure combines a per-seat platform license, a contact-volume tier, and an optional outcome-based bonus tied to deflection rate. Detailed pricing is provided in Exhibit B. We are open to negotiating an anchor commitment in exchange for [DISCOUNT POSTURE — Maya to approve].",
+      "citations": ["pricing-sheet"],
+      "placeholders": ["DISCOUNT POSTURE — Maya to approve"]
+    },
+    {
+      "section": "References",
+      "owner": "priya",
+      "body": "Three financial services references are provided in Exhibit E: Citibank (fraud triage), First Republic (outbound servicing), and [THIRD REFERENCE — Priya to secure]. Each reference is current within the past 12 months and is approved for written attribution.",
+      "citations": ["case-study-citibank", "customer-references"],
+      "placeholders": ["THIRD REFERENCE — Priya to secure"]
+    }
+  ],
+  "exports": [
+    { "name": "proposal_response.docx", "size": "184 KB", "ready": true },
+    { "name": "compliance_matrix.xlsx", "size": "62 KB", "ready": true },
+    { "name": "missing_items_checklist.pdf", "size": "28 KB", "ready": true },
+    { "name": "submission_packet.zip", "size": "9.4 MB", "ready": false }
+  ]
+}

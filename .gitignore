@@ -40,3 +40,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code (skills, agents, local settings) — keep local
+.claude/
+
+# Skill/agent-generated specs — keep local
+spec/
+
+# Anything starting with "private" — at any depth
+private*
+**/private*
+
