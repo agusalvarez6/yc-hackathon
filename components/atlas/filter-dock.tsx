@@ -72,7 +72,7 @@ export function FilterDock({
       : `$${filters.valueMin}m – $${filters.valueMax}m`;
 
   return (
-    <div className="space-y-2">
+    <div className="relative z-40 space-y-2">
       <div className="flex flex-wrap items-center gap-2">
         <SearchPill
           value={filters.search}
@@ -275,7 +275,7 @@ function FilterPopover({
       </button>
       {open && (
         <div
-          className="absolute left-0 top-full z-30 mt-2 rounded-xl border bg-card p-2 shadow-lg"
+          className="absolute left-0 top-full z-50 mt-2 rounded-xl border bg-card p-2 shadow-lg"
           style={{ width }}
           role="dialog"
         >
