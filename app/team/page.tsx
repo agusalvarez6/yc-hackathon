@@ -1,6 +1,5 @@
-import { Plus, UserPlus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/avatar";
 import { getOpportunities, getRfpDetail, getTeam } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -33,12 +32,6 @@ export default function TeamPage() {
       <PageHeader
         title="Response team"
         subtitle="Who owns what when an RFP needs a human answer"
-        actions={
-          <Button size="sm">
-            <UserPlus className="h-4 w-4" />
-            Invite teammate
-          </Button>
-        }
       />
 
       <div className="p-6 space-y-6">

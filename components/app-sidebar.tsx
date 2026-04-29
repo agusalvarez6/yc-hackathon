@@ -9,11 +9,13 @@ import {
   Sparkles,
   Settings,
   HelpCircle,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Opportunities", icon: Inbox },
+  { href: "/rfp/new", label: "New RFP", icon: Plus },
   { href: "/documents", label: "Documents", icon: FolderOpen },
   { href: "/team", label: "Response Team", icon: Users },
 ];
@@ -36,8 +38,11 @@ export function AppSidebar({ companyName }: { companyName: string }) {
           const Icon = link.icon;
           const isActive =
             link.href === "/"
-              ? pathname === "/" || pathname.startsWith("/rfp")
-              : pathname.startsWith(link.href);
+              ? pathname === "/" ||
+                (pathname.startsWith("/rfp") && pathname !== "/rfp/new")
+              : link.href === "/rfp/new"
+                ? pathname === "/rfp/new"
+                : pathname.startsWith(link.href);
           return (
             <Link
               key={link.href}

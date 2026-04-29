@@ -1,6 +1,5 @@
-import { CircleAlert, FileText, Upload } from "lucide-react";
+import { CircleAlert, FileText } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { Button } from "@/components/ui/button";
 import { OwnerPill } from "@/components/owner-pill";
 import { getDocuments } from "@/lib/data";
 
@@ -21,12 +20,6 @@ export default function DocumentsPage() {
       <PageHeader
         title="Document library"
         subtitle="Every response cites and learns from these documents"
-        actions={
-          <Button size="sm">
-            <Upload className="h-4 w-4" />
-            Upload document
-          </Button>
-        }
       />
 
       <div className="p-6">
