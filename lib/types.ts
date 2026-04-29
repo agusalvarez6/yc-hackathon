@@ -123,3 +123,8 @@ export interface RfpDetail {
   draft: RfpDraftSection[];
   exports: RfpExportFile[];
 }
+
+export type RfpId = string & { __brand: "RfpId" };
+export type TaskId = string & { __brand: "TaskId" };
+export type ChunkId = string & { __brand: "ChunkId" };
+export type ProposalId = string & { __brand: "ProposalId" };
