@@ -9,9 +9,11 @@ import { generateProposalAction } from "@/app/actions/proposal";
 export function RegenerateButton({
   rfpId,
   hasProposal,
+  disabled,
 }: {
   rfpId: string;
   hasProposal: boolean;
+  disabled?: boolean;
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function RegenerateButton({
           {error}
         </p>
       )}
-      <Button onClick={onClick} disabled={pending} size="sm">
+      <Button onClick={onClick} disabled={pending || disabled} size="sm">
         {pending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
