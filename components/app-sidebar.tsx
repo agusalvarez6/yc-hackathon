@@ -81,6 +81,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ companyName, user }: AppSidebarProps) {
   const pathname = usePathname();
+  if (pathname?.startsWith("/auth")) return null;
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r bg-background/60 backdrop-blur-sm md:flex">
