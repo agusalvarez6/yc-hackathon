@@ -405,7 +405,11 @@ function TasksSection({
               <ul className="space-y-2 p-4">
                 {items.map((req) => (
                   <li key={req.id}>
-                    <TaskRow req={req} documentMap={documentMap} />
+                    <TaskRow
+                      req={req}
+                      documentMap={documentMap}
+                      team={team.members}
+                    />
                   </li>
                 ))}
               </ul>
