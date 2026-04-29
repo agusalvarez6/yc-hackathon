@@ -10,31 +10,42 @@ import type { Result } from "@/lib/ai/result";
 import type { RfpDetail } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 import { getTeam } from "@/lib/data";
+import { pdfToText } from "@/lib/pdf";
 import { autoAssignTasks } from "./_helpers/assign";
 
 export type IngestRfpInput =
   | { mode: "text"; text: string; slug?: string }
-  | { mode: "pdf"; fileName: string; bytes: ArrayBuffer; slug?: string };
+  | { mode: "pdf"; file: File; slug?: string };
 
 export async function ingestRfp(
   input: IngestRfpInput,
 ): Promise<Result<{ rfpId: string; slug: string }>> {
-  if (input.mode !== "text") {
-    return { ok: false, error: "PDF intake not implemented" };
-  }
-
   try {
+    let text: string;
+    let sourceKind: "text" | "pdf";
+    if (input.mode === "text") {
+      text = input.text;
+      sourceKind = "text";
+    } else {
+      const buffer = Buffer.from(await input.file.arrayBuffer());
+      text = await pdfToText(buffer);
+      if (text.trim() === "") {
+        return { ok: false, error: "no extractable text" };
+      }
+      sourceKind = "pdf";
+    }
+
     const supabase = await createClient();
 
-    const detail = await extractRfpDetail({ rfpText: input.text });
+    const detail = await extractRfpDetail({ rfpText: text });
     const slug = input.slug ?? detail.id;
 
     const inserted = await supabase
       .from("rfps")
       .insert({
         slug,
-        source_kind: "text",
-        source_text: input.text,
+        source_kind: sourceKind,
+        source_text: text,
         detail,
       })
       .select("id")
