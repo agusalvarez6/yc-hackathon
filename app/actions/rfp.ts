@@ -5,8 +5,12 @@ import {
   matchRfp,
   type MatchChunk,
 } from "@/lib/ai/services";
+import { embed } from "@/lib/ai/embed";
 import type { Result } from "@/lib/ai/result";
 import type { RfpDetail } from "@/lib/types";
+import { createClient } from "@/lib/supabase/server";
+import { getTeam } from "@/lib/data";
+import { autoAssignTasks } from "./_helpers/assign";
 
 export type IngestRfpInput =
   | { mode: "text"; text: string; slug?: string }
@@ -15,36 +19,118 @@ export type IngestRfpInput =
 export async function ingestRfp(
   input: IngestRfpInput,
 ): Promise<Result<{ rfpId: string; slug: string }>> {
+  if (input.mode !== "text") {
+    return { ok: false, error: "PDF intake not implemented" };
+  }
+
   try {
-    const rfpText =
-      input.mode === "text"
-        ? input.text
-        : `pdf:${input.fileName}:${input.bytes.byteLength}`;
+    const supabase = await createClient();
 
-    const detail = await extractRfpDetail({ rfpText });
-    // TODO: persist `detail` to the `rfps` table once DB layer is wired.
-
+    const detail = await extractRfpDetail({ rfpText: input.text });
     const slug = input.slug ?? detail.id;
-    return { ok: true, data: { rfpId: detail.id, slug } };
+
+    const inserted = await supabase
+      .from("rfps")
+      .insert({
+        slug,
+        source_kind: "text",
+        source_text: input.text,
+        detail,
+      })
+      .select("id")
+      .single();
+
+    if (inserted.error) {
+      return { ok: false, error: inserted.error.message };
+    }
+    const rfpId = inserted.data.id as string;
+
+    const hits = await gatherChunks(supabase, detail);
+    const out = await matchRfp({ rfp: detail, chunks: hits });
+
+    detail.bidNoBid = {
+      recommendation: out.recommendation,
+      confidence: out.confidence,
+      strengths: out.strengths,
+      weaknesses: out.weaknesses,
+    };
+    for (const req of detail.compliance) {
+      const m = out.requirements.find((r) => r.id === req.id);
+      if (m) {
+        req.status = m.status;
+        req.risk = m.risk;
+        req.evidence = m.evidence;
+        if (m.note !== undefined) req.note = m.note;
+      }
+    }
+
+    const upd = await supabase
+      .from("rfps")
+      .update({ detail, last_matched_at: new Date().toISOString() })
+      .eq("id", rfpId);
+    if (upd.error) return { ok: false, error: upd.error.message };
+
+    const team = getTeam().members;
+    const openReqs = detail.compliance.filter((r) => r.status !== "ready");
+    const assignments = autoAssignTasks(openReqs, team);
+
+    if (assignments.length > 0) {
+      const rows = assignments.map((a) => {
+        const req = openReqs.find((r) => r.id === a.requirementId)!;
+        return {
+          rfp_id: rfpId,
+          requirement_id: req.id,
+          requirement_section: req.section,
+          requirement_text: req.requirement,
+          assignee_id: a.assigneeId,
+          assignment_reason: a.assignmentReason,
+          status: "open" as const,
+        };
+      });
+      const ti = await supabase.from("tasks").insert(rows);
+      if (ti.error) return { ok: false, error: ti.error.message };
+    }
+
+    return { ok: true, data: { rfpId, slug } };
   } catch (e) {
     const error = e instanceof Error ? e.message : "unknown error";
     return { ok: false, error };
   }
 }
 
-export async function matchRfpAction(input: {
-  rfpId: string;
-}): Promise<Result<{ confidence: number }>> {
-  try {
-    void input.rfpId;
-    // TODO: load RfpDetail and chunk hits from DB; placeholders below.
-    const rfp = {} as RfpDetail;
-    const chunks: MatchChunk[] = [];
+async function gatherChunks(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  detail: RfpDetail,
+): Promise<MatchChunk[]> {
+  const queries = detail.compliance.map((r) => r.requirement);
+  if (queries.length === 0) return [];
+  const vectors = await embed(queries);
 
-    const out = await matchRfp({ rfp, chunks });
-    return { ok: true, data: { confidence: out.confidence } };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : "unknown error";
-    return { ok: false, error };
+  const seen = new Set<string>();
+  const out: MatchChunk[] = [];
+  for (let i = 0; i < vectors.length && out.length < 50; i++) {
+    const { data, error } = await supabase.rpc("match_chunks", {
+      query_embedding: vectors[i],
+      k: 5,
+    });
+    if (error || !data) continue;
+    for (const row of data as Array<{
+      id: string;
+      document_id: string;
+      tag: string;
+      page: number;
+      content: string;
+    }>) {
+      if (seen.has(row.id)) continue;
+      seen.add(row.id);
+      out.push({
+        documentId: row.document_id,
+        tag: row.tag,
+        page: row.page,
+        content: row.content,
+      });
+      if (out.length >= 50) break;
+    }
   }
+  return out;
 }
