@@ -1,16 +1,11 @@
 "use server";
 
-import {
-  extractRfpDetail,
-  matchRfp,
-  type MatchChunk,
-} from "@/lib/ai/services";
-import { embed } from "@/lib/ai/embed";
+import { extractRfpDetail, matchRfp } from "@/lib/ai/services";
 import type { Result } from "@/lib/ai/result";
-import type { RfpDetail } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 import { getTeam } from "@/lib/data";
 import { pdfToText } from "@/lib/pdf";
+import { loadCompanyCorpus } from "@/lib/company-corpus";
 import { autoAssignTasks } from "./_helpers/assign";
 
 export type IngestRfpInput =
@@ -56,8 +51,8 @@ export async function ingestRfp(
     }
     const rfpId = inserted.data.id as string;
 
-    const hits = await gatherChunks(supabase, detail);
-    const out = await matchRfp({ rfp: detail, chunks: hits });
+    const corpus = loadCompanyCorpus();
+    const out = await matchRfp({ rfp: detail, corpus });
 
     detail.bidNoBid = {
       recommendation: out.recommendation,
@@ -107,41 +102,4 @@ export async function ingestRfp(
     const error = e instanceof Error ? e.message : "unknown error";
     return { ok: false, error };
   }
-}
-
-async function gatherChunks(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  detail: RfpDetail,
-): Promise<MatchChunk[]> {
-  const queries = detail.compliance.map((r) => r.requirement);
-  if (queries.length === 0) return [];
-  const vectors = await embed(queries);
-
-  const seen = new Set<string>();
-  const out: MatchChunk[] = [];
-  for (let i = 0; i < vectors.length && out.length < 50; i++) {
-    const { data, error } = await supabase.rpc("match_chunks", {
-      query_embedding: vectors[i],
-      k: 5,
-    });
-    if (error || !data) continue;
-    for (const row of data as Array<{
-      id: string;
-      document_id: string;
-      tag: string;
-      page: number;
-      content: string;
-    }>) {
-      if (seen.has(row.id)) continue;
-      seen.add(row.id);
-      out.push({
-        documentId: row.document_id,
-        tag: row.tag,
-        page: row.page,
-        content: row.content,
-      });
-      if (out.length >= 50) break;
-    }
-  }
-  return out;
 }

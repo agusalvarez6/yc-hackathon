@@ -1,5 +1,4 @@
 export { ai } from "./client";
-export { embed } from "./embed";
 export type { Result } from "./result";
 
 export {
@@ -13,14 +12,13 @@ export {
   extractRfpDetail,
   matchRfp,
   generateProposalMarkdown,
-  classifyOwner,
 } from "./services";
 export type {
   ExtractRfpInput,
   MatchInput,
-  MatchChunk,
+  CorpusDocument,
+  EvidenceNote,
   ProposalInput,
-  ClassifyOwnerInput,
 } from "./services";
 
 export { loadPrompt } from "./prompts";
