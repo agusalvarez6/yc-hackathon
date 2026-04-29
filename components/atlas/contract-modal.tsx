@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { MarketplaceContract } from "@/lib/marketplace/contracts";
-import { CATEGORY_BY_ID } from "@/lib/marketplace/countries";
+import type { AtlasContract } from "@/lib/atlas/contracts";
+import { CATEGORY_BY_ID } from "@/lib/atlas/countries";
 
 interface ContractModalProps {
-  contract: MarketplaceContract | null;
+  contract: AtlasContract | null;
   onClose: () => void;
 }
 

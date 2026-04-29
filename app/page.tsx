@@ -10,13 +10,13 @@ import {
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import type { OpportunitySummary, Recommendation } from "@/lib/types";
-import { getMarketplaceContracts } from "@/lib/marketplace/contracts";
-import { MarketplaceList } from "@/components/marketplace/marketplace-list";
-import { MarketplaceWorld } from "@/components/marketplace/marketplace-world";
+import { getAtlasContracts } from "@/lib/atlas/contracts";
+import { AtlasList } from "@/components/atlas/atlas-list";
+import { AtlasWorld } from "@/components/atlas/atlas-world";
 import {
   ViewSwitcher,
-  type MarketplaceView,
-} from "@/components/marketplace/view-switcher";
+  type AtlasView,
+} from "@/components/atlas/view-switcher";
 
 interface InboxItem {
   rfpId: string;
@@ -198,14 +198,14 @@ async function MarketplaceSection({
   searchParams: Promise<{ view?: string }>;
 }) {
   const sp = await searchParams;
-  const view: MarketplaceView = sp.view === "world" ? "world" : "list";
-  const contracts = getMarketplaceContracts();
+  const view: AtlasView = sp.view === "world" ? "world" : "list";
+  const contracts = getAtlasContracts();
 
   return (
     <section className="space-y-3">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold">Marketplace</h2>
+          <h2 className="text-sm font-semibold">Atlas</h2>
           <p className="text-xs text-muted-foreground">
             All public RFPs we&apos;re tracking.
           </p>
@@ -214,9 +214,13 @@ async function MarketplaceSection({
       </div>
 
       {view === "world" ? (
-        <MarketplaceWorld contracts={contracts} />
+        <AtlasWorld
+          contracts={contracts}
+          selectedCountry={null}
+          onSelectedCountryChange={() => {}}
+        />
       ) : (
-        <MarketplaceList contracts={contracts} />
+        <AtlasList contracts={contracts} />
       )}
     </section>
   );
@@ -226,7 +230,7 @@ function MarketplaceFallback() {
   return (
     <section className="space-y-3">
       <div>
-        <h2 className="text-sm font-semibold">Marketplace</h2>
+        <h2 className="text-sm font-semibold">Atlas</h2>
         <p className="text-xs text-muted-foreground">
           All public RFPs we&apos;re tracking.
         </p>

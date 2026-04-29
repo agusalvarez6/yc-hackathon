@@ -3,7 +3,7 @@
 /* Globe.tsx — full-bleed 3D globe with REAL country borders + contract markers.
    Slow rotation, drag/zoom (correct directions), hover tooltip, click-to-filter.
    Draw loop is FULLY decoupled from React state via refs — no flicker.
-   Ported from the standalone Lyra Marketplace prototype. */
+   Ported from the standalone Lyra Atlas prototype. */
 
 import {
   useRef,
@@ -16,9 +16,9 @@ import {
   type PointerEvent as ReactPointerEvent,
   type WheelEvent as ReactWheelEvent,
 } from "react";
-import { COUNTRY_BY_CODE } from "@/lib/marketplace/countries";
-import { M49_TO_A3 } from "@/lib/marketplace/iso-map";
-import type { MarketplaceContract } from "@/lib/marketplace/contracts";
+import { COUNTRY_BY_CODE } from "@/lib/atlas/countries";
+import { M49_TO_A3 } from "@/lib/atlas/iso-map";
+import type { AtlasContract } from "@/lib/atlas/contracts";
 import "./globe.css";
 
 const DEG = Math.PI / 180;
@@ -168,13 +168,13 @@ export interface GlobeHandle {
 }
 
 export interface GlobeProps {
-  contracts: MarketplaceContract[];
+  contracts: AtlasContract[];
   selectedCountry: string | null;
   hoveredCountry: string | null;
   onCountryClick?: (a3: string) => void;
   onCountryHover?: (a3: string | null) => void;
-  onMarkerClick?: (contract: MarketplaceContract) => void;
-  onMarkerHover?: (contract: MarketplaceContract | null) => void;
+  onMarkerClick?: (contract: AtlasContract) => void;
+  onMarkerHover?: (contract: AtlasContract | null) => void;
   rightInset?: number;
   leftInset?: number;
   autoRotate?: boolean;
@@ -189,7 +189,7 @@ interface Stats {
   maxValue: number;
 }
 interface Marker {
-  contract: MarketplaceContract;
+  contract: AtlasContract;
   a3: string;
   lat: number;
   lng: number;

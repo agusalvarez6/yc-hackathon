@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import {
   CATEGORY_BY_ID,
   COUNTRY_BY_CODE,
-} from "@/lib/marketplace/countries";
-import type { MarketplaceContract } from "@/lib/marketplace/contracts";
+} from "@/lib/atlas/countries";
+import type { AtlasContract } from "@/lib/atlas/contracts";
 import type { GlobeHandle } from "./globe";
 import { ContractModal } from "./contract-modal";
 
@@ -22,15 +22,21 @@ const STATUS_TONE: Record<string, string> = {
   "Under review": "bg-amber-50 text-amber-700 ring-amber-600/20",
 };
 
-interface MarketplaceWorldProps {
-  contracts: MarketplaceContract[];
+interface AtlasWorldProps {
+  contracts: AtlasContract[];
+  selectedCountry: string | null;
+  onSelectedCountryChange: (a3: string | null) => void;
 }
 
-export function MarketplaceWorld({ contracts }: MarketplaceWorldProps) {
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+export function AtlasWorld({
+  contracts,
+  selectedCountry,
+  onSelectedCountryChange,
+}: AtlasWorldProps) {
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-  const [selected, setSelected] = useState<MarketplaceContract | null>(null);
+  const [selected, setSelected] = useState<AtlasContract | null>(null);
   const globeRef = useRef<GlobeHandle>(null);
+  const setSelectedCountry = onSelectedCountryChange;
 
   const totals = useMemo(() => {
     const total = contracts.length;

@@ -1,4 +1,4 @@
-// Deterministic mock contract generator for the marketplace view.
+// Deterministic mock contract generator for the Atlas world view.
 // Same seed (42) and same iteration order as the standalone prototype, so the
 // output is stable across renders and across server/client boundaries.
 
@@ -10,7 +10,7 @@ export type ContractStatus =
   | "Awarded"
   | "Under review";
 
-export interface MarketplaceContract {
+export interface AtlasContract {
   id: number;
   title: string;
   agency: string;
@@ -84,10 +84,10 @@ const MED = new Set([
   "NOR", "FIN",
 ]);
 
-let cache: MarketplaceContract[] | null = null;
+let cache: AtlasContract[] | null = null;
 
-function generate(): MarketplaceContract[] {
-  const contracts: MarketplaceContract[] = [];
+function generate(): AtlasContract[] {
+  const contracts: AtlasContract[] = [];
   let id = 1;
 
   // Same LCG as the prototype. Stable seed so the layout never drifts.
@@ -131,7 +131,7 @@ function generate(): MarketplaceContract[] {
   return contracts;
 }
 
-export function getMarketplaceContracts(): MarketplaceContract[] {
+export function getAtlasContracts(): AtlasContract[] {
   if (!cache) cache = generate();
   return cache;
 }

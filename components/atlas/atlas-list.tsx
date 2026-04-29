@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { CATEGORY_BY_ID } from "@/lib/marketplace/countries";
-import type { MarketplaceContract } from "@/lib/marketplace/contracts";
+import { CATEGORY_BY_ID } from "@/lib/atlas/countries";
+import type { AtlasContract } from "@/lib/atlas/contracts";
 import { ContractModal } from "./contract-modal";
 
-interface MarketplaceListProps {
-  contracts: MarketplaceContract[];
+interface AtlasListProps {
+  contracts: AtlasContract[];
 }
 
 const STATUS_TONE: Record<string, string> = {
@@ -19,9 +19,9 @@ const STATUS_TONE: Record<string, string> = {
   "Under review": "bg-amber-50 text-amber-700 ring-amber-600/20",
 };
 
-export function MarketplaceList({ contracts }: MarketplaceListProps) {
+export function AtlasList({ contracts }: AtlasListProps) {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<MarketplaceContract | null>(null);
+  const [selected, setSelected] = useState<AtlasContract | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

@@ -4,18 +4,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Globe, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type MarketplaceView = "list" | "world";
+export type AtlasView = "list" | "world";
 
-const ITEMS: { id: MarketplaceView; label: string; icon: typeof List }[] = [
+const ITEMS: { id: AtlasView; label: string; icon: typeof List }[] = [
   { id: "list", label: "List", icon: List },
   { id: "world", label: "World", icon: Globe },
 ];
 
-export function ViewSwitcher({ active }: { active: MarketplaceView }) {
+export function ViewSwitcher({ active }: { active: AtlasView }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  function setView(next: MarketplaceView) {
+  function setView(next: AtlasView) {
     if (next === active) return;
     const params = new URLSearchParams(searchParams.toString());
     if (next === "list") params.delete("view");
