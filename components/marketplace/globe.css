@@ -1,0 +1,71 @@
+/* Interaction surface and tooltip styles for the marketplace globe.
+   Tailwind covers everything else; this file only contains the bits the
+   canvas needs (cursor states, absolute-positioned tooltip, etc.). */
+
+.globe-stage {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.globe-stage.grabbing {
+  cursor: grabbing;
+}
+
+.globe-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: #09090b;
+  color: #fff;
+  padding: 8px 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow:
+    0 24px 48px -12px rgba(15, 23, 42, 0.14),
+    0 8px 16px -4px rgba(15, 23, 42, 0.06);
+  transform: translate(-50%, calc(-100% - 14px));
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  z-index: 20;
+}
+
+.tooltip.visible {
+  opacity: 1;
+}
+
+.tooltip .country {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.tooltip .row {
+  display: flex;
+  gap: 14px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 3px;
+}
+
+.tooltip .row b {
+  color: #fff;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.tooltip-contract {
+  transform: translate(-50%, calc(-100% - 14px));
+  max-width: 280px;
+  white-space: normal;
+}
+
+.tooltip-contract .country {
+  font-size: 12.5px;
+  line-height: 1.3;
+}
