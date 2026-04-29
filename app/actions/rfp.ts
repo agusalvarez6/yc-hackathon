@@ -33,7 +33,7 @@ export async function ingestRfp(
     const supabase = await createClient();
 
     const detail = await extractRfpDetail({ rfpText: text });
-    const slug = input.slug ?? detail.id;
+    const slug = input.slug ?? `${detail.id}-${Date.now().toString(36).slice(-6)}`;
 
     const inserted = await supabase
       .from("rfps")

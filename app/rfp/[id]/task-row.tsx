@@ -23,9 +23,10 @@ interface TaskRowProps {
   req: RfpRequirement;
   documentMap: Record<string, CompanyDocument>;
   team: TeamMember[];
+  taskId?: string;
 }
 
-export function TaskRow({ req, documentMap, team }: TaskRowProps) {
+export function TaskRow({ req, documentMap, team, taskId }: TaskRowProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [evidence, setEvidence] = useState("");
@@ -33,16 +34,21 @@ export function TaskRow({ req, documentMap, team }: TaskRowProps) {
   const [pending, startTransition] = useTransition();
   const [reassigning, startReassign] = useTransition();
   const [done, setDone] = useState(req.status === "ready");
+  const interactive = Boolean(taskId);
 
   function submitEvidence() {
     setError(null);
+    if (!taskId) {
+      setError("This task isn't tracked in the database (seed data only).");
+      return;
+    }
     if (!evidence.trim()) {
       setError("Add a short evidence note before submitting.");
       return;
     }
     startTransition(async () => {
       const res = await completeTaskWithEvidenceAction({
-        taskId: req.id,
+        taskId,
         evidenceText: evidence,
       });
       if (!res.ok) {
@@ -57,10 +63,11 @@ export function TaskRow({ req, documentMap, team }: TaskRowProps) {
   }
 
   function reassign(assigneeId: string) {
+    if (!taskId) return;
     if (assigneeId === req.owner) return;
     setError(null);
     startReassign(async () => {
-      const res = await reassignTaskAction({ taskId: req.id, assigneeId });
+      const res = await reassignTaskAction({ taskId, assigneeId });
       if (!res.ok) {
         setError(res.error);
         return;
@@ -122,7 +129,7 @@ export function TaskRow({ req, documentMap, team }: TaskRowProps) {
           )}
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
-          {!done && (
+          {!done && interactive && (
             <>
               <ReassignMenu
                 team={team}

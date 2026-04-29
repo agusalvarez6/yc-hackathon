@@ -20,7 +20,8 @@ export async function generateProposalMarkdown(
 
   const completion = await ai.chat.completions.create({
     model: "google/gemini-3.1-pro-preview",
-    max_tokens: 8000,
+    max_tokens: 64000,
+    reasoning_effort: "low",
     messages: [
       { role: "system", content: system },
       { role: "user", content: user },
